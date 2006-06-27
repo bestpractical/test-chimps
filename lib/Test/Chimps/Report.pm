@@ -85,7 +85,7 @@ sub _init {
   my $self = shift;
   validate_with(
     params => \@_,
-    called => 'The Test::Chimps::Report constructor'
+    called => 'The Test::Chimps::Report constructor',
     spec   => {
       model            => { isa => 'Test::TAP::Model' },
       report_text      => 0,
@@ -93,7 +93,7 @@ sub _init {
         optional => 1,
         type     => HASHREF
       }
-    },
+    }
   );
 
   my %args = @_;

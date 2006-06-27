@@ -4,6 +4,7 @@ use warnings;
 use strict;
 
 use Test::Chimps::Report;
+use Test::Chimps::Server::Lister;
 
 use Algorithm::TokenBucket;
 use CGI::Carp   qw<fatalsToBrowser>;
@@ -12,7 +13,6 @@ use Digest::MD5 qw<md5_hex>;
 use File::Basename;
 use File::Spec;
 use Fcntl       qw<:DEFAULT :flock>;
-use HTML::Mason;
 use Params::Validate qw<:all>;
 use Storable    qw<store_fd fd_retrieve freeze>;
 use YAML::Syck;
@@ -69,6 +69,12 @@ Burst upload rate allowed (see L<Algorithm::Bucket>).  Defaults to
 Template filename under base_dir/template_dir to use for listing
 smoke reports.  Defaults to 'list.tmpl'.
 
+=item * lister
+
+An instance of L<Test::Chimps::Server::Lister> to use to list smoke
+reports.  You do not have to use this option unless you are
+subclassing C<Lister>.
+
 =item * max_rate
 
 Maximum upload rate allowed (see L<Algorithm::Bucket>).  Defaults
@@ -79,7 +85,7 @@ to 1/30.
 Maximum size of HTTP POST that will be accepted.  Defaults to 3
 MiB.
 
-=item * max_smokes_per_subcategory
+=item * max_reports_per_subcategory
 
 Maximum number of smokes allowed per category.  Defaults to 5.
 
@@ -107,8 +113,9 @@ use base qw/Class::Accessor/;
 
 __PACKAGE__->mk_ro_accessors(
   qw/base_dir bucket_file max_rate max_size
-    max_smokes_per_subcategory report_dir
-    template_dir list_template variables_validation_spec/
+    max_reports_per_subcategory report_dir
+    template_dir list_template lister
+    variables_validation_spec/
 );
 
 sub new {
@@ -150,6 +157,11 @@ sub _init {
         optional => 1,
         default  => 'list.tmpl'
       },
+      lister => {
+        type     => SCALAR,
+        isa      => 'Test::Chimps::Server::Lister',
+        optional => 1
+      },
       max_rate => {
         type      => SCALAR,
         default   => 1 / 30,
@@ -166,7 +178,7 @@ sub _init {
           "greater than or equal to 0" => sub { $_[0] >= 0 }
         }
       },
-      max_smokes_per_subcategory => {
+      max_reports_per_subcategory => {
         type      => SCALAR,
         default   => 5,
         optional  => 1,
@@ -221,7 +233,6 @@ sub _process_upload {
   $self->_validate_params($cgi);  
   $self->_variables_validation_spec($cgi);
   $self->_add_report($cgi);
-  $self->_clean_old_reports($cgi);
 
   print "ok";
 }
@@ -326,10 +337,6 @@ sub _add_report {
   }
 }
 
-sub _clean_old_reports {
-  # XXX: stub
-}
-
 sub _process_detail {
   my $self = shift;
   my $cgi = shift;
@@ -362,20 +369,27 @@ sub _process_listing {
 
   my @reports = map { LoadFile($_) } @files;
 
+  # XXX FIXME we shouldn't just be adding this stuff here
   for (my $i = 0; $i < scalar @reports ; $i++) {
     my ($filename, $directories, $suffix) = fileparse($files[$i], '.yml');
     $reports[$i]->{url} = $cgi->url . "?id=$filename";
     $reports[$i]->{id} = $filename;
   }
+
+  my $lister;
+  if (defined $self->lister) {
+    $lister = $self->lister;
+  } else {
+    $lister = Test::Chimps::Server::Lister->new(
+      list_template               => $self->list_template,
+      max_reports_per_subcategory => $self->max_reports_per_subcategory
+    );
+  }
   
-  my $interp = HTML::Mason::Interp->new(comp_root =>
-                                        File::Spec->catfile($self->{base_dir},
-                                                            $self->{template_dir}));
-  $interp->exec(File::Spec->catfile(File::Spec->rootdir,
-                                    $self->{list_template}),
-                report_dir => $self->{http_report_dir},
-                reports => \@reports);
-  
+  $lister->output_list(File::Spec->catdir($self->{base_dir},
+                                          $self->{template_dir}),
+                       \@reports);
+                                                   
 }
 
 =head1 AUTHOR
