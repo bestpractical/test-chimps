@@ -120,61 +120,72 @@ sub new {
 
 sub _init {
   my $self = shift;
-  my %args = validate_with
-    (params => \@_,
-     called => 'The Test::Chimps::Server constructor',
-     spec => 
-     { base_dir =>
-       { type => SCALAR,
-         optional => 0 },
-       bucket_file =>
-       { type => SCALAR,
-         default => 'bucket.dat',
-         optional => 1 },
-       burst_rate =>
-       { type => SCALAR,
-         optional => 1,
-         default => 5,
-         callbacks =>
-         { "greater than or equal to 0" =>
-           sub { $_[0] >= 0 }} },
-       variables_validation_spec =>
-       { type => HASHREF,
-         optional => 1 },
-       list_template =>
-       { type => SCALAR,
-         optional => 1,
-         default => 'list.tmpl' },
-       max_rate =>
-       { type => SCALAR,
-         default => (1 / 30),
-         optional => 1,
-         callbacks =>
-         {"greater than or equal to 0" =>
-          sub { $_[0] >= 0 }} },
-       max_size =>
-       { type => SCALAR,
-         default => 2**20 * 3.0,
-         optional => 1,
-         callbacks =>
-         { "greater than or equal to 0" =>
-           sub { $_[0] >= 0 }} },
-       max_smokes_per_subcategory =>
-       { type => SCALAR,
-         default => 5,
-         optional => 1,
-         callbacks =>
-         { "greater than or equal to 0" =>
-           sub { $_[0] >= 0 }} },
-       report_dir =>
-       { type => SCALAR,
-         default => 'reports',
-         optional => 1 },
-       template_dir =>
-       { type => SCALAR,
-         default => 'templates',
-         optional => 1 }
-     });
+  my %args = validate_with(
+    params => \@_,
+    called => 'The Test::Chimps::Server constructor',
+    spec   => {
+      base_dir => {
+        type     => SCALAR,
+        optional => 0
+      },
+      bucket_file => {
+        type     => SCALAR,
+        default  => 'bucket.dat',
+        optional => 1
+      },
+      burst_rate => {
+        type      => SCALAR,
+        optional  => 1,
+        default   => 5,
+        callbacks => {
+          "greater than or equal to 0" => sub { $_[0] >= 0 }
+        }
+      },
+      variables_validation_spec => {
+        type     => HASHREF,
+        optional => 1
+      },
+      list_template => {
+        type     => SCALAR,
+        optional => 1,
+        default  => 'list.tmpl'
+      },
+      max_rate => {
+        type      => SCALAR,
+        default   => 1 / 30,
+        optional  => 1,
+        callbacks => {
+          "greater than or equal to 0" => sub { $_[0] >= 0 }
+        }
+      },
+      max_size => {
+        type      => SCALAR,
+        default   => 2**20 * 3.0,
+        optional  => 1,
+        callbacks => {
+          "greater than or equal to 0" => sub { $_[0] >= 0 }
+        }
+      },
+      max_smokes_per_subcategory => {
+        type      => SCALAR,
+        default   => 5,
+        optional  => 1,
+        callbacks => {
+          "greater than or equal to 0" => sub { $_[0] >= 0 }
+        }
+      },
+      report_dir => {
+        type     => SCALAR,
+        default  => 'reports',
+        optional => 1
+      },
+      template_dir => {
+        type     => SCALAR,
+        default  => 'templates',
+        optional => 1
+      }
+    }
+  );
   
   foreach my $key (keys %args) {
     $self->{$key} = $args{$key};
