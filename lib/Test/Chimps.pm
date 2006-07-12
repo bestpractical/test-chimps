@@ -98,14 +98,9 @@ L<http://search.cpan.org/dist/Test-Chimps>
 
 =back
 
-=head1 ACKNOWLEDGEMENTS
-
-The code in this distribution is based on smokeserv-client.pl and
-smokeserv-server.pl from the Pugs distribution.
-
 =head1 COPYRIGHT & LICENSE
 
-Copyright 2006 Zev Benjamin, all rights reserved.
+Copyright 2006 Best Practical Solutions.
 
 This program is free software; you can redistribute it and/or modify it
 under the same terms as Perl itself.
