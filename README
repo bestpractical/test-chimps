@@ -1,10 +1,9 @@
 Test-Chimps
 
-This module modularizes the pugs smoke server/client
-(smokeserv-client.pl and smokeserv-server.pl).  It also makes the
-code more generic so that other groups can take advantage of the
-simple but powerful smoke server. It will provide scripts to
-replicate pugs' scripts behavior in a more generic fashion.
+Chimps is the Collaborative Heterogeneous Infinite Monkey
+Perfectionification Service.  It is a framework for storing,
+viewing, generating, and uploading smoke reports.  This
+distribution provides server-side modules and binaries for Chimps.
 
 INSTALLATION
 
@@ -38,7 +37,8 @@ You can also look for information at:
 
 COPYRIGHT AND LICENCE
 
-Copyright (C) 2006 Zev Benjamin
+Copyright 2006 Best Practical Solutions, all rights reserved.
+Portions copyright 2005-2006 the Pugs project, all rights reserved.
 
 This program is free software; you can redistribute it and/or modify it
 under the same terms as Perl itself.

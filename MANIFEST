@@ -1,6 +1,4 @@
-bin/poll_and_submit.pl
-bin/report_server.pl
-bin/submit_report.pl
+bin/chimps-server.pl
 bin/yaml2dbi.pl
 Changes
 examples/list.tmpl
@@ -16,8 +14,6 @@ inc/Module/Install/Metadata.pm
 inc/Module/Install/Win32.pm
 inc/Module/Install/WriteAll.pm
 lib/Test/Chimps.pm
-lib/Test/Chimps/Client.pm
-lib/Test/Chimps/Client/Poller.pm
 lib/Test/Chimps/Report.pm
 lib/Test/Chimps/ReportCollection.pm
 lib/Test/Chimps/Server.pm
@@ -27,11 +23,9 @@ MANIFEST			This list of files
 META.yml
 README
 t/00-dependencies.t
-t/01-report-basic.t
-t/05-client-basic.t
+t/05-report-basic.t
 t/10-server-basic.t
-t/15-poller-basic.t
-t/20-lister-basic.t
+t/15-lister-basic.t
 t/bogus-tests/00-basic.t
 t/boilerplate.t
 t/pod-coverage.t

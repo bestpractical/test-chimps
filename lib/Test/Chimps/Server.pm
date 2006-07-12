@@ -479,12 +479,13 @@ L<http://search.cpan.org/dist/Test-Chimps>
 
 =head1 ACKNOWLEDGEMENTS
 
-The code in this distribution is based on smokeserv-client.pl and
-smokeserv-server.pl from the PUGS distribution.
+Some code in this distribution is based on smokeserv-server.pl from
+the PUGS distribution.
 
 =head1 COPYRIGHT & LICENSE
 
-Copyright 2006 Zev Benjamin, all rights reserved.
+Copyright 2006 Best Practical Solutions, all rights reserved.
+Portions copyright 2005-2006 the Pugs project, all rights reserved.
 
 This program is free software; you can redistribute it and/or modify it
 under the same terms as Perl itself.

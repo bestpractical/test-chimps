@@ -5,22 +5,17 @@ use strict;
 
 =head1 NAME
 
-Test::Chimps::Report - Encapsulate a smoke test report
+Test::Chimps::ReportCollection - Encapsulate a collection of smoke test reports
 
 =head1 SYNOPSIS
 
-FIXME
-
-=head1 METHODS
-
-=head2 new ARGS
-
-Creates a new Report.  ARGS is a hash whose only valid key is
-handle.  Its value must be a Jifty::DBI::Handle.
+See L<Jifty::DBI::Collection>.
 
 =cut
   
 use base qw/Jifty::DBI::Collection/;
+
+=head1 METHODS
 
 =head2 record_class
 
@@ -79,7 +74,7 @@ smokeserv-server.pl from the Pugs distribution.
 
 =head1 COPYRIGHT & LICENSE
 
-Copyright 2006 Zev Benjamin, all rights reserved.
+Copyright 2006 Best Practical Solutions, all rights reserved.
 
 This program is free software; you can redistribute it and/or modify it
 under the same terms as Perl itself.

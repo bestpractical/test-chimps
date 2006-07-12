@@ -15,7 +15,6 @@ requires('Jifty::DBI::Handle');
 requires('Jifty::DBI::Record');
 requires('Jifty::DBI::Schema');
 requires('Jifty::DBI::SchemaGenerator');
-requires('LWP::UserAgent');
 requires('Params::Validate');
 requires('Test::TAP::HTMLMatrix');
 requires('Test::TAP::Model::Visual');

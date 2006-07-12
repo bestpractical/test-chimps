@@ -11,6 +11,9 @@ Test::Chimps::Report - Encapsulate a smoke test report
 
 FIXME
 
+Note that parts of this class are dynamically generated in
+Test::Chimps::Server base on the configuation file.
+
 =head1 METHODS
 
 =head2 new ARGS
@@ -126,7 +129,7 @@ smokeserv-server.pl from the Pugs distribution.
 
 =head1 COPYRIGHT & LICENSE
 
-Copyright 2006 Zev Benjamin, all rights reserved.
+Copyright 2006 Best Practical Solutions, all rights reserved.
 
 This program is free software; you can redistribute it and/or modify it
 under the same terms as Perl itself.
