@@ -2,7 +2,7 @@
 
 use Test::Chimps::Server;
 
-my $server = Test::Chimps::Server->new(base_dir => '/var/www/bps-smokes',
+my $server = Test::Chimps::Server->new(base_dir => '/some/dir',
                                        list_template => 'list.tmpl',
                                        variables_validation_spec =>
                                        { project => 1,
