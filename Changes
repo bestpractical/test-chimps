@@ -1,8 +1,11 @@
 Revision history for Test-Chimps
 
-0.01    Fri Jun 16 13:21:11 EDT 2006
-        First revision.  
+0.03    Fri Jul 21 16:11:32 EDT 2006
+        * fixed extraneous dep
 
 0.02    Wed Jul 12 16:17:00 EDT 2006
         Split off from main Chimps distribution and first CPAN
         release.
+
+0.01    Fri Jun 16 13:21:11 EDT 2006
+        First revision.  

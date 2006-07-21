@@ -1,6 +1,5 @@
-bin/chimps-server.pl
-bin/yaml2dbi.pl
 Changes
+examples/chimps-server.pl
 examples/list.tmpl
 inc/Module/AutoInstall.pm
 inc/Module/Install.pm
