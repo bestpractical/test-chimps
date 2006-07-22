@@ -1,5 +1,8 @@
 Revision history for Test-Chimps
 
+0.04    Fri Jul 21 21:29:15 EDT 2006
+        * added dummy file to work around Module::Install bug
+
 0.03    Fri Jul 21 16:11:32 EDT 2006
         * fixed extraneous dep
 
