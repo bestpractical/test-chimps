@@ -230,7 +230,7 @@ sub _init {
     mkpath($dbdir);
   }
   
-  my $dbname = File::Spec->catfile(dbdir,
+  my $dbname = File::Spec->catfile($dbdir,
                                    $self->database_file);
   $self->{handle} = Jifty::DBI::Handle->new();
 
