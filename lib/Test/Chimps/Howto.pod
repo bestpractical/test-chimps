@@ -109,7 +109,7 @@ screen session so that it doesn't die when your terminal exits.
 You also probably want to redirect its output to a file so that you
 can look at what went wrong if your projects fail tests.
 
-    chimps@gorilla:~$ bin/chimps-smoker.pl &> log
+    chimps@gorilla:~$ bin/chimps-smoker.pl -s http://gorilla.banana2.com/cgi-bin/chimps-server.pl &> log
 
 That's it!  You now have a smoker that will continually check out
 new revisions of C<Test::Dependencies>, run the test suite, and

@@ -1,5 +1,9 @@
 Revision history for Test-Chimps
 
+0.06    Sun Aug 13 19:46:45 EDT 2006
+        * forgot -s option to smoker in howto
+        * fix in lister for small numbers of rows in reports
+
 0.05    Sun Aug 13 14:37:23 EDT 2006
         * added package line to Test/Chimps.pm
         * added report variables documentation

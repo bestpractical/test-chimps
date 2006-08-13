@@ -158,8 +158,12 @@ sub _prune_reports {
 
   foreach my $category (keys %$categories) {
     foreach my $subcategory (keys %{$categories->{$category}}) {
-      @{$categories->{$category}->{$subcategory}} =
-        @{$categories->{$category}->{$subcategory}}[0 .. ($self->max_reports_per_subcategory - 1)];
+      if (scalar @{$categories->{$category}->{$subcategory}} >
+          $self->max_reports_per_subcategory)
+        {
+          @{$categories->{$category}->{$subcategory}} =
+            @{$categories->{$category}->{$subcategory}}[0 .. ($self->max_reports_per_subcategory - 1)];
+        }
     }
   }
 }
