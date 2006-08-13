@@ -6,18 +6,18 @@ Test::Chimps - Collaborative Heterogeneous Infinite Monkey Perfectionification S
 
 =head1 VERSION
 
-Version 0.04
+Version 0.05
 
 =cut
 
-our $VERSION = '0.04';
+our $VERSION = '0.05';
 
 =head1 SYNOPSIS
 
 Why run tests yourself?  Let an infinite number of monkeys do it
-for you!  Take the monkey work out of testing.  Remove the monkey
-wrench from your development process.  Will the monkey jokes ever
-end?  No!  We really are more fun than a barrel full of monkeys!
+for you!  Take the monkey work out of testing!  Remove the monkey
+wrench from your development process!  Alright, I'm done.  Sorry
+about that.  I got a little carried away...
 
 The Collaborative Heterogeneous Infinite Monkey Perfectionification
 Service (CHIMPS) is a generalized testing framework designed to
@@ -81,6 +81,13 @@ You can find documentation for this module with the perldoc command.
 You can also look for information at:
 
 =over 4
+
+=item * Mailing list
+
+Chimps has a mailman mailing list at
+L<chimps@bestpractical.com>.  You can subscribe via the web
+interface at
+L<http://lists.bestpractical.com/cgi-bin/mailman/listinfo/chimps>.
 
 =item * AnnoCPAN: Annotated CPAN documentation
 

@@ -186,6 +186,13 @@ You can also look for information at:
 
 =over 4
 
+=item * Mailing list
+
+Chimps has a mailman mailing list at
+L<chimps@bestpractical.com>.  You can subscribe via the web
+interface at
+L<http://lists.bestpractical.com/cgi-bin/mailman/listinfo/chimps>.
+
 =item * AnnoCPAN: Annotated CPAN documentation
 
 L<http://annocpan.org/dist/Test-Chimps>

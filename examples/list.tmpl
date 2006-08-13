@@ -1,6 +1,3 @@
-% # This template is based on code from smokeserv-server.pl in the
-% # Pugs distribution
-% #
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
   "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
@@ -66,14 +63,9 @@
   <h1>Smoke Reports</h1>
 
   <p>
-    Note that old smoke reports may be automatically deleted, so you may not want
-    to link directly to a smoke.
-  </p>
-
-  <p>
     Timezone is UTC
   </p>
- 
+
   <table>
 % foreach my $category (sort keys %$categories) {
       <tr><th colspan="11" class="category"><% $category %></th></tr>
@@ -128,3 +120,14 @@ sub detail_url {
   return $cgi->url . "?id=" . $report->id;
 }
 </%once>
+
+<%doc>
+This template is based on code from smokeserv-server.pl in the
+Pugs distribution
+
+This template assumes the use of the following report variables:
+project
+revision
+committer
+duration
+</%doc>

@@ -13,6 +13,7 @@ use CGI;
 use Digest::MD5 qw<md5_hex>;
 use Fcntl       qw<:DEFAULT :flock>;
 use File::Basename;
+use File::Path;
 use File::Spec;
 use Jifty::DBI::Handle;
 use Jifty::DBI::SchemaGenerator;
@@ -223,8 +224,13 @@ sub _init {
     }
   }
 
-  my $dbname = File::Spec->catfile($self->base_dir,
-                                   $self->database_dir,
+  my $dbdir = File::Spec->catdir($self->base_dir,
+                                 $self->database_dir);
+  if (! -e $dbdir) {
+    mkpath($dbdir);
+  }
+  
+  my $dbname = File::Spec->catfile(dbdir,
                                    $self->database_file);
   $self->{handle} = Jifty::DBI::Handle->new();
 
@@ -458,6 +464,13 @@ You can find documentation for this module with the perldoc command.
 You can also look for information at:
 
 =over 4
+
+=item * Mailing list
+
+Chimps has a mailman mailing list at
+L<chimps@bestpractical.com>.  You can subscribe via the web
+interface at
+L<http://lists.bestpractical.com/cgi-bin/mailman/listinfo/chimps>.
 
 =item * AnnoCPAN: Annotated CPAN documentation
 

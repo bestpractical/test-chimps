@@ -1,7 +1,10 @@
 Revision history for Test-Chimps
 
-0.05
+0.05    Sun Aug 13 14:37:23 EDT 2006
         * added package line to Test/Chimps.pm
+        * added report variables documentation
+        * added mailing list information
+        * added a HowTo
 
 0.04    Fri Jul 21 21:29:15 EDT 2006
         * added dummy file to work around Module::Install bug

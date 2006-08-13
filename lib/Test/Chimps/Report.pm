@@ -9,7 +9,7 @@ Test::Chimps::Report - Encapsulate a smoke test report
 
 =head1 SYNOPSIS
 
-FIXME
+Represents a smoke report.  See L<Jifty::DBI::Record>.
 
 Note that parts of this class are dynamically generated in
 Test::Chimps::Server base on the configuation file.
@@ -56,7 +56,9 @@ C<Test::Chimps::Report>s have the following columns (and consequently accessors)
 =back
 
 Additionally, columns are added dynamically based on the report
-variables specified in the server.
+variables specified in the server.  Unfortunately, this means that
+external modules have a hard time getting at the C<Report> class as
+seen by the server.
 
 =cut
 
@@ -103,6 +105,13 @@ You can find documentation for this module with the perldoc command.
 You can also look for information at:
 
 =over 4
+
+=item * Mailing list
+
+Chimps has a mailman mailing list at
+L<chimps@bestpractical.com>.  You can subscribe via the web
+interface at
+L<http://lists.bestpractical.com/cgi-bin/mailman/listinfo/chimps>.
 
 =item * AnnoCPAN: Annotated CPAN documentation
 
