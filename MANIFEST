@@ -13,6 +13,7 @@ inc/Module/Install/Metadata.pm
 inc/Module/Install/Win32.pm
 inc/Module/Install/WriteAll.pm
 lib/Test/Chimps.pm
+lib/Test/Chimps/Howto.pod
 lib/Test/Chimps/Report.pm
 lib/Test/Chimps/ReportCollection.pm
 lib/Test/Chimps/Server.pm
