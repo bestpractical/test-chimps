@@ -1,3 +1,5 @@
+package Test::Chimps;
+
 =head1 NAME
 
 Test::Chimps - Collaborative Heterogeneous Infinite Monkey Perfectionification Service
