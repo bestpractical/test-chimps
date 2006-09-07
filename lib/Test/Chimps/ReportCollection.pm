@@ -27,6 +27,18 @@ sub record_class {
   return 'Test::Chimps::Report';
 }
 
+=head2 table
+
+Overridden method.  Always returns 'reports'.
+
+=cut
+
+# we don't need this for SVN Jifty::DBI, but those changes haven't
+# been pushed to CPAN yet
+sub table {
+  return 'reports';
+}
+
 =head1 AUTHOR
 
 Zev Benjamin, C<< <zev at cpan.org> >>
