@@ -219,8 +219,11 @@ sub _init {
 
   if (defined $self->variables_validation_spec) {
     foreach my $var (keys %{$self->variables_validation_spec}) {
-      package Test::Chimps::Report::Schema;
-      column($var, type(is('text')));
+      my $column = Test::Chimps::Report->add_column($var);
+      $column->type("text");
+      $column->writable(1);
+      $column->readable(1);
+      Test::Chimps::Report->_init_methods_for_column($column);
     }
   }
 
