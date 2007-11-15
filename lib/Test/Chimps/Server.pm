@@ -55,12 +55,12 @@ Mandatory.  Base directory where report data will be stored.
 
 =item * bucket_file
 
-Name of bucket database file (see L<Algorithm::Bucket>).  Defaults
+Name of bucket database file (see L<Algorithm::TokenBucket>).  Defaults
 to 'bucket.dat'.
 
 =item * burst_rate
 
-Burst upload rate allowed (see L<Algorithm::Bucket>).  Defaults to
+Burst upload rate allowed (see L<Algorithm::TokenBucket>).  Defaults to
 5.
 
 =item * database_dir
@@ -86,7 +86,7 @@ subclassing C<Lister>.
 
 =item * max_rate
 
-Maximum upload rate allowed (see L<Algorithm::Bucket>).  Defaults
+Maximum upload rate allowed (see L<Algorithm::TokenBucket>).  Defaults
 to 1/30.
 
 =item * max_size
