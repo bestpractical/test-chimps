@@ -20,10 +20,11 @@ use Jifty::DBI::SchemaGenerator;
 use Params::Validate qw<:all>;
 use Storable    qw<store_fd fd_retrieve nfreeze thaw>;
 use TAP::Formatter::HTML;
+use TAP::Harness::Archive;
 use YAML::Syck;
 use DateTime;
 
-use constant PROTO_VERSION => 0.2;
+use constant PROTO_VERSION => 1.0;
 
 =head1 NAME
 
@@ -215,11 +216,6 @@ sub _init {
           "greater than or equal to 0" => sub { $_[0] >= 0 }
         }
       },
-      report_dir => {
-        type     => SCALAR,
-        default  => 'reports',
-        optional => 1
-      },
       template_dir => {
         type     => SCALAR,
         default  => 'templates',
@@ -313,9 +309,8 @@ sub _process_upload {
   my $cgi = shift;
 
   print $cgi->header("text/plain");
-  $self->_limit_rate($cgi);
+#  $self->_limit_rate($cgi);
   $self->_validate_params($cgi);  
-  $self->_variables_validation_spec($cgi);
   $self->_add_report($cgi);
 
   print "ok";
@@ -364,28 +359,27 @@ sub _validate_params {
     exit;
   }
 
-  if(! $cgi->param("model_structure")) {
-    print "No model structure given!";
+  if(! $cgi->param("archive")) {
+    print "No archive given!";
     exit;
   }
 
-#  uncompress_smoke();
 }
 
 sub _variables_validation_spec {
   my $self = shift;
-  my $cgi = shift;
+  my $meta = shift;
+  my %meta = %{$meta};
   
   if (defined $self->{variables_validation_spec}) {
-    my $report_variables = thaw($cgi->param('report_variables'));
     eval {
-      validate(@{[%$report_variables]}, $self->{variables_validation_spec});
+      validate(@{[%meta]}, $self->{variables_validation_spec});
     };
     if (defined $@ && $@) {
       # XXX: doesn't dump subroutines because we're using YAML::Syck
       print "This server accepts specific report variables.  It's validation ",
         "string looks like this:\n", Dump($self->{variables_validation_spec}),
-          "\nYour report variables look like this:\n", $cgi->param('report_variables');
+          "\nYour report variables look like this:\n", Dump(\%meta);
       exit;
     }
   }
@@ -395,47 +389,59 @@ sub _add_report {
   my $self = shift;
   my $cgi = shift;
 
-  my $params = {};
+  # We hate CGI.pm's fake filehandle objects -- move to a real
+  # tempfile
+  my $archive = $cgi->upload('archive');
+  my $tmpfile = File::Temp->new( SUFFIX => ".tar.gz" );
+  print $tmpfile do {local $/; <$archive>};
+  close $tmpfile;
 
-  $params->{timestamp} = DateTime->from_epoch(epoch => time);
-  
-  my $report_variables = thaw($cgi->param('report_variables'));
-  foreach my $var (keys %{$report_variables}) {
-    $params->{$var} = $report_variables->{$var};
-  }
-  
-  my $model = Test::TAP::Model::Visual->new_with_struct(thaw($cgi->param('model_structure')));
+  my ($start, $end, $meta);
+  my $formatter = TAP::Formatter::HTML->new;
+  $formatter->verbosity(-3);
+  my $aggregator = TAP::Harness::Archive->aggregator_from_archive( {
+      archive => "$tmpfile",
+      made_parser_callback => sub {
+          my ($parser, $file, $full_path) = @_;
+          my $session = $formatter->open_test( $file, $parser ); 
+          while ( defined( my $result = $parser->next ) ) {
+              $session->result($result);
+          }
+          $session->close_test;
+      },
+      meta_yaml_callback => sub {
+          ($meta) = @_;
+          $start = $meta->[0]->{start_time};
+          $end   = $meta->[0]->{stop_time};
+          $formatter->prepare(@{$meta->[0]->{file_order}});
+      }
+  } );
+  $self->_variables_validation_spec($meta->[0]{extra_properties});
 
-  foreach my $var (
-    qw/total_ok
-    total_passed
-    total_nok
-    total_failed
-    total_percentage
-    total_ratio
-    total_seen
-    total_skipped
-    total_todo
-    total_unexpectedly_succeeded/
-    )
-  {
+  # Such a hack, but TAP::Harness::Archive doesn't store the actual benchmark values. 
+  $aggregator->{start_time} = bless [$start, 0, 0, 0, 0, 0], 'Benchmark';
+  $aggregator->{end_time} = bless [$end, 0, 0, 0, 0, 0], 'Benchmark';
 
-    $params->{$var} = $model->$var;
-  }
+  $formatter->summary( $aggregator );
 
-  $params->{model_structure} = thaw($cgi->param('model_structure'));
-  
-  my $matrix = Test::TAP::HTMLMatrix->new($model,
-                                          Dump(thaw($cgi->param('report_variables'))));
-  $matrix->has_inline_css(1);
-  $params->{report_html} = $matrix->detail_html;
-
-  my $report = Test::Chimps::Report->new(handle => $self->handle);
-
-  my ($id, $msg) = $report->create(%$params);
+  my %params = (
+      %{$meta->[0]{extra_properties}},
+      timestamp     => DateTime->from_epoch(epoch => time),
+      total_passed  => scalar $aggregator->passed,
+      total_failed  => scalar $aggregator->failed,
+      total_ratio   => $aggregator->total ? $aggregator->passed / $aggregator->total : 0,
+      total_seen    => scalar $aggregator->total,
+      total_skipped => scalar $aggregator->skipped,
+      total_todo    => scalar $aggregator->todo,
+      total_unexpectedly_succeeded => scalar $aggregator->todo_passed,
+      duration      => $end - $start,
+      report_html   => ${$formatter->html},
+  );
+  my $report = Test::Chimps::Report->new( handle => $self->handle );
+  my ($id, $msg) = $report->create(%params);
   unless ($id) {
       open(FAIL, ">/tmp/report-fail");
-      print FAIL Dump($params);
+      print FAIL Dump(\%params);
       close FAIL;
       croak "Couldn't add report to database: $msg\n";
   }
@@ -475,9 +481,10 @@ sub _process_listing {
                              timestamp
                              committer
                              duration
+
                              total_ratio
                              total_seen
-                             total_ok
+                             total_passed
                              total_failed
                              total_todo
                              total_skipped
