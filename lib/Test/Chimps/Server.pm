@@ -63,15 +63,21 @@ to 'bucket.dat'.
 Burst upload rate allowed (see L<Algorithm::TokenBucket>).  Defaults to
 5.
 
-=item * database_dir
+=item * database
 
-Directory under bsae_dir where the SQLite database will be stored.
-Defaults to 'chimpsdb'.
+Name of the database
 
-=item * database_file
+=item * database_driver
 
-File under database_dir to use as the SQLite database.  Defaults to
-'database'.
+Database driver to use
+
+=item * database_user
+
+User to connect ot the database as
+
+=item * database_password
+
+Password to connect to the database with
 
 =item * list_template
 
@@ -117,7 +123,7 @@ use base qw/Class::Accessor/;
 
 __PACKAGE__->mk_ro_accessors(
   qw/base_dir bucket_file max_rate max_size
-    max_reports_per_subcategory database_dir database_file
+    max_reports_per_subcategory database database_driver database_user database_password
     template_dir list_template lister
     variables_validation_spec handle/
 );
@@ -152,15 +158,25 @@ sub _init {
           "greater than or equal to 0" => sub { $_[0] >= 0 }
         }
       },
-      database_dir => {
+      database => {
         type     => SCALAR,
         optional => 1,
-        default  => 'chimpsdb'
+        default  => 'chimpsdb/database'
       },
-      database_file => {
+      database_driver => {
         type     => SCALAR,
         optional => 1,
-        default  => 'database'
+        default  => 'SQLite'
+      },
+      database_user => {
+        type     => SCALAR,
+        optional => 1,
+        default  => ''
+      },
+      database_password => {
+        type     => SCALAR,
+        optional => 1,
+        default  => ''
       },
       variables_validation_spec => {
         type     => HASHREF,
@@ -227,31 +243,49 @@ sub _init {
     }
   }
 
-  my $dbdir = File::Spec->catdir($self->base_dir,
-                                 $self->database_dir);
-  if (! -e $dbdir) {
-    mkpath($dbdir);
-  }
-  
-  my $dbname = File::Spec->catfile($dbdir,
-                                   $self->database_file);
   $self->{handle} = Jifty::DBI::Handle->new();
+  eval {
+    $self->handle->connect(driver => $self->database_driver,
+                           database => $self->database,
+                           user => $self->database_user,
+                           password => $self->database_password,
+                          );
+  };
 
-  # create the table if the db doesn't exist.  ripped out of
-  # Jifty::Script::Schema because this stuff should be in
-  # Jifty::DBI, but isn't
-  if (! -e $dbname) {
+  my $error = $@;
+  if ( $error =~ /database .*? does not exist/i
+        or $error =~ /unknown database/i ) {
+    if ($self->database_driver ne 'SQLite') {
+      warn "Creating database\n";
+      my $dbname = $self->database;
+      $dbname = 'template1' if $self->database_driver =~ /Pg/;
+      $dbname = '' if $self->database_driver eq 'mysql';
+      my $create_handle = Jifty::DBI::Handle->new;
+      $create_handle->connect(driver => $self->database_driver,
+                              database => $dbname,
+                              user => $self->database_user,
+                              password => $self->database_password,
+                            );
+
+      my $query = "CREATE DATABASE ".$self->database;
+      $query .= " TEMPLATE template0" if $self->database_driver =~ /Pg/;
+      $create_handle->simple_query($query);
+      $create_handle->disconnect;
+
+      $self->{handle} = Jifty::DBI::Handle->new();
+      $self->handle->connect(driver => $self->database_driver,
+                             database => $self->database,
+                             user => $self->database_user,
+                             password => $self->database_password,
+                            );
+    }
+
+    warn "Running create statements\n";
     my $sg = Jifty::DBI::SchemaGenerator->new($self->handle);
     $sg->add_model(Test::Chimps::Report->new(handle => $self->handle));
-  
-    $self->handle->connect(driver => 'SQLite',
-                           database => $dbname);
-    # for non SQLite
-#    $self->handle->simple_query('CREATE DATABASE database');
     $self->handle->simple_query($_) for $sg->create_table_sql_statements;
-  } else {
-    $self->handle->connect(driver => 'SQLite',
-                           database => $dbname);
+  } elsif ($error) {
+    die $error;
   }
 }
 
@@ -399,7 +433,13 @@ sub _add_report {
 
   my $report = Test::Chimps::Report->new(handle => $self->handle);
 
-  $report->create(%$params) or croak "Couldn't add report to database: $!\n";
+  my ($id, $msg) = $report->create(%$params);
+  unless ($id) {
+      open(FAIL, ">/tmp/report-fail");
+      print FAIL Dump($params);
+      close FAIL;
+      croak "Couldn't add report to database: $msg\n";
+  }
 }
 
 sub _process_detail {
@@ -422,11 +462,31 @@ sub _process_listing {
 
   print $cgi->header();
 
-  my $report_coll = Test::Chimps::ReportCollection->new(handle => $self->handle);
-  $report_coll->unlimit;
+  my @projects = map {$_->[0]} @{$self->handle->simple_query("select project from reports group by project")->fetchall_arrayref([0])};
+
   my @reports;
-  while (my $report = $report_coll->next) {
-    push @reports, $report;
+  for my $projectname (@projects) {
+    my $report_coll = Test::Chimps::ReportCollection->new(handle => $self->handle);
+    $report_coll->limit( column => "project", value => $projectname, case_sensitive => 1 );
+    $report_coll->order_by( column => "timestamp", order => "DESC");
+    $report_coll->set_page_info( per_page => $self->max_reports_per_subcategory, current_page => 1);
+    $report_coll->columns(qw/id
+                             project
+                             revision
+                             timestamp
+                             committer
+                             duration
+                             total_ratio
+                             total_seen
+                             total_ok
+                             total_failed
+                             total_todo
+                             total_skipped
+                             total_unexpectedly_succeeded
+                            /);
+    while (my $report = $report_coll->next) {
+      push @reports, $report;
+    }
   }
 
   my $lister;
