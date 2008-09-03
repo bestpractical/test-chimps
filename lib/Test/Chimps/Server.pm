@@ -20,6 +20,7 @@ use Jifty::DBI::SchemaGenerator;
 use Params::Validate qw<:all>;
 use Storable    qw<store_fd fd_retrieve nfreeze thaw>;
 use TAP::Formatter::HTML;
+use TAP::Parser::Aggregator;
 use TAP::Harness::Archive;
 use YAML::Syck;
 use DateTime;
