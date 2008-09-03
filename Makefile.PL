@@ -10,6 +10,7 @@ requires('Class::Accessor');
 requires('DateTime');
 requires('HTML::Mason');
 requires('TAP::Formatter::HTML');
+requires('TAP::Parser::Aggregator');
 requires('TAP::Harness::Archive');
 requires('Jifty::DBI::Collection');
 requires('Jifty::DBI::Handle');
