@@ -68,21 +68,16 @@ use Jifty::DBI::Schema;
 use Jifty::DBI::Record schema {
 
 column report_html                  => type is 'text';
-column model_structure              => type is 'text',
-  filters are 'Jifty::DBI::Filter::Storable', 'Jifty::DBI::Filter::base64';
 column timestamp                    => type is 'timestamp',
   filters are 'Jifty::DBI::Filter::DateTime';
-column total_ok                     => type is 'integer';
 column total_passed                 => type is 'integer';
-column total_nok                    => type is 'integer';
 column total_failed                 => type is 'integer';
-column total_percentage             => type is 'varchar(200)';
 column total_ratio                  => type is 'float';
 column total_seen                   => type is 'integer';
 column total_skipped                => type is 'integer';
 column total_todo                   => type is 'integer';
 column total_unexpectedly_succeeded => type is 'integer';
-
+column duration                     => type is 'integer';
 };
 
 =head1 AUTHOR
