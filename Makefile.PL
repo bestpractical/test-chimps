@@ -9,14 +9,14 @@ requires('Algorithm::TokenBucket');
 requires('Class::Accessor');
 requires('DateTime');
 requires('HTML::Mason');
+requires('TAP::Formatter::HTML');
+requires('TAP::Harness::Archive');
 requires('Jifty::DBI::Collection');
 requires('Jifty::DBI::Handle');
 requires('Jifty::DBI::Record');
 requires('Jifty::DBI::Schema');
 requires('Jifty::DBI::SchemaGenerator');
 requires('Params::Validate');
-requires('Test::TAP::HTMLMatrix');
-requires('Test::TAP::Model::Visual');
 requires('YAML::Syck');
 
 build_requires('Test::Dependencies');
