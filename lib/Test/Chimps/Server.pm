@@ -19,8 +19,7 @@ use Jifty::DBI::Handle;
 use Jifty::DBI::SchemaGenerator;
 use Params::Validate qw<:all>;
 use Storable    qw<store_fd fd_retrieve nfreeze thaw>;
-use Test::TAP::HTMLMatrix;
-use Test::TAP::Model::Visual;
+use TAP::Formatter::HTML;
 use YAML::Syck;
 use DateTime;
 
