@@ -400,6 +400,8 @@ sub _add_report {
   my ($start, $end, $meta);
   my $formatter = TAP::Formatter::HTML->new;
   $formatter->verbosity(-3);
+  $formatter->js_uris(['/jquery-1.2.6.pack.js','/default_report.js']);
+  $formatter->css_uris(['/default_page.css',   '/default_report.css']);
   my $aggregator = TAP::Harness::Archive->aggregator_from_archive( {
       archive => "$tmpfile",
       made_parser_callback => sub {
