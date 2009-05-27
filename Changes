@@ -1,5 +1,12 @@
 Revision history for Test-Chimps
 
+0.08
+        * Added CSS and JS urls
+        * Use TAP::Formatter::HTML for output
+        * Remove unused report_dir config var
+        * Ability to use non-sqlite databases
+        * Update for new Jifty::DBI
+
 0.07    Thu Sep  7 17:37:38 EDT 2006
         * added a C<table> method to ReportCollection for
           compatibility with older version of Jifty::DBI
