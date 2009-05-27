@@ -22,5 +22,7 @@ requires('YAML::Syck');
 
 build_requires('Test::Dependencies');
 
+extra_tests;
+
 auto_install;
 WriteAll;
