@@ -6,6 +6,7 @@ inc/Module/Install.pm
 inc/Module/Install/AutoInstall.pm
 inc/Module/Install/Base.pm
 inc/Module/Install/Can.pm
+inc/Module/Install/ExtraTests.pm
 inc/Module/Install/Fetch.pm
 inc/Module/Install/Include.pm
 inc/Module/Install/Makefile.pm
@@ -23,11 +24,11 @@ MANIFEST			This list of files
 META.yml
 README
 t-data/chimps-home/chimpsdb/dummy
-t/00-dependencies.t
 t/05-report-basic.t
 t/10-server-basic.t
 t/15-lister-basic.t
 t/bogus-tests/00-basic.t
 t/boilerplate.t
-t/pod-coverage.t
-t/pod.t
+xt/release/dependencies.t
+xt/release/pod-coverage.t
+xt/release/pod.t
