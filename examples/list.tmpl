@@ -82,7 +82,8 @@
             <td class="leftsep num"><% $report->duration %>&nbsp;sec</td>
             <td class="leftsep num"><% sprintf("%.2f", $report->total_ratio * 100) %>%&nbsp;ok</td>
 	    <td class="leftsep num tests_total"><span title="<% $report->total_seen %> total"><% $report->total_seen %></span>:</td>
-	    <td class="num tests_ok"><span title="<% $report->total_ok %> ok"><% $report->total_ok %></span>,</td>
+	    <td class="num tests_ok"><span title="<% $report->total_passed %>
+        ok"><% $report->total_passed %></span>,</td>
 	    <td class="num tests_failed"><span title="<% $report->total_failed %> failed"><% $report->total_failed %></span>,</td>
 	    <td class="num tests_todo"><span title="<% $report->total_todo %> todo"><% $report->total_todo %></span>,</td>
 	    <td class="num tests_skipped"><span title="<% $report->total_skipped %> skipped"><% $report->total_skipped %></span>,</td>
@@ -93,7 +94,7 @@
           <tr class="details" id="details_<% $report->id %>">
             <td colspan="11" class="report_details">
                 <span class="tests_total"><% $report->total_seen %> test cases</span>:<br />
-		<span class="tests_ok"><% $report->total_ok %> ok</span>,
+		<span class="tests_ok"><% $report->total_passed %> ok</span>,
 		<span class="tests_failed"><% $report->total_failed %> failed</span>,
 		<span class="tests_todo"><% $report->total_todo %> todo</span>,<br />
                 <span class="tests_skipped"><% $report->total_skipped %> skipped</span> and
@@ -131,3 +132,5 @@ revision
 committer
 duration
 </%doc>
+<%init>
+</%init>

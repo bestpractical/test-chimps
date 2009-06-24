@@ -94,7 +94,9 @@ C</home/chimps/smoker-config.yml>:
       configure_cmd: perl Makefile.PL --defaultdeps && make
       revision: 5751
       root_dir: .
-      svn_uri: svn://svn.bestpractical.com/svn/bps-public/Test-Dependencies/trunk
+      repository:
+        uri: svn://svn.bestpractical.com/svn/bps-public/Test-Dependencies/trunk
+        type: SVN
 
 Most of the options are pretty straightforward (you can read about
 the rest in L<Test::Chimps::Smoker/"CONFIGURATION FILE">), but
