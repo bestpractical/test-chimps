@@ -143,10 +143,12 @@ sub _sort_reports {
 }
 
 sub _by_revision_then_date {
-  my $res = $b->revision <=> $a->revision;
+  unless ( $a->revision =~ /\D/ or $b->revision =~ /\D/ ) {
+    my $res = $b->revision <=> $a->revision;
 
-  if ($res != 0) {
-    return $res;
+    if ($res != 0) {
+      return $res;
+    }
   }
   
   return DateTime->compare($b->timestamp, $a->timestamp);
