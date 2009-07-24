@@ -75,7 +75,11 @@
           <tr>
             <td class="report_summary"><% $report->project %></td>
             <td>
+% if ( $report->revision =~ /\D/ ) {
+              <% $report->revision %>
+% } else {
               r<% $report->revision %>
+% }
             </td>
             <td class="leftsep"><% $report->committer %></td>
             <td class="leftsep"><% $report->timestamp %></td>
