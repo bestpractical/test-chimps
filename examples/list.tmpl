@@ -22,6 +22,26 @@
       padding:          10px;
     }
 
+    #toc {
+      margin: 0;
+      padding: 0 1em 0 3em;
+    }
+
+    #toc li {
+      display: block;
+      float: left;
+      width: 9em;
+      height: 1.3em;
+      overflow: hidden;
+      padding-right: 0.5em;
+      padding-bottom: 0.2em;
+    }
+
+    .to-top {
+        font-size: 80%;
+        font-weight: normal;
+    }
+
     th       { text-align: left; }
     .category       { padding-top:  30px; border-bottom: 2px solid #313052; }
     .subcategory    { padding-top:  10px; border-bottom: 1px solid #313052; }
@@ -60,18 +80,26 @@
 </head>
 
 <body>
+  <a name="top"></a>
   <h1>Smoke Reports</h1>
 
   <p>
     Timezone is UTC
   </p>
 
+  <ol id="toc">
+% foreach my $category (sort keys %$categories) {
+    <li><a href="#<% $category |u %>"><% $category %></a></li>
+% }
+  </ol>
+
   <table>
 % foreach my $category (sort keys %$categories) {
-      <tr><th colspan="11" class="category"><% $category %></th></tr>
+      <tr><th colspan="11" class="category"><a name="<% $category %>"><% $category %></a> <span class="to-top">(<a href="#top">top</a>)</span></th></tr>
 % foreach my $subcategory (sort keys %{$categories->{$category}}) {
         <tr><th colspan="11" class="subcategory"><% $subcategory %></th></tr>
 % foreach my $report (@{$categories->{$category}->{$subcategory}}) {
+% next unless $report;
           <tr>
             <td class="report_summary"><% $report->project %></td>
             <td>
@@ -86,8 +114,7 @@
             <td class="leftsep num"><% $report->duration %>&nbsp;sec</td>
             <td class="leftsep num"><% sprintf("%.2f", $report->total_ratio * 100) %>%&nbsp;ok</td>
 	    <td class="leftsep num tests_total"><span title="<% $report->total_seen %> total"><% $report->total_seen %></span>:</td>
-	    <td class="num tests_ok"><span title="<% $report->total_passed %>
-        ok"><% $report->total_passed %></span>,</td>
+	    <td class="num tests_ok"><span title="<% $report->total_passed %> ok"><% $report->total_passed %></span>,</td>
 	    <td class="num tests_failed"><span title="<% $report->total_failed %> failed"><% $report->total_failed %></span>,</td>
 	    <td class="num tests_todo"><span title="<% $report->total_todo %> todo"><% $report->total_todo %></span>,</td>
 	    <td class="num tests_skipped"><span title="<% $report->total_skipped %> skipped"><% $report->total_skipped %></span>,</td>
@@ -136,5 +163,3 @@ revision
 committer
 duration
 </%doc>
-<%init>
-</%init>
